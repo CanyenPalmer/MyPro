@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
-import openai
+from openai import OpenAI
+import os
 
-openai.api_key = "your-api-key-here"
+client = OpenAI()  # Uses OPENAI_API_KEY from your Render env
 
 app = Flask(__name__)
 
@@ -12,19 +13,17 @@ def get_golf_response(question):
         "Only answer golf-related questions. Be clear and actionable."
     )
 
-    messages = [
-        {"role": "system", "content": system_message},
-        {"role": "user", "content": question}
-    ]
-
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
-        messages=messages,
+        messages=[
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": question}
+        ],
         temperature=0.7,
         max_tokens=300
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -35,7 +34,5 @@ def index():
     return render_template("index.html", answer=answer)
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(debug=True, host="0.0.0.0", port=port)
-
