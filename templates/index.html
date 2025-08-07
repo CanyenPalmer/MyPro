@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPro - Golf Q&A Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🏌️ MyPro - Golf Q&A Assistant</h1>
+        <form method="POST">
+            <input type="text" name="question" placeholder="Ask a golf question..." required>
+            <button type="submit">Ask</button>
+        </form>
+
+        {% if answer %}
+        <div class="answer-box">
+            <h2>✅ Answer:</h2>
+            <p>{{ answer|safe }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
